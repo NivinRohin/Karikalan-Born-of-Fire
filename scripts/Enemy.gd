@@ -3,6 +3,7 @@ class_name Enemy
 
 @export var max_health: int = 30
 @export var speed: float = 150.0
+@export var detection_range: float = 400.0
 @export var attack_range: float = 80.0
 @export var attack_damage: int = 10
 @export var attack_cooldown: float = 1.0
@@ -23,6 +24,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var attack_visual = $AttackVisual
 
 func _ready():
+	add_to_group("enemy")
 	health = max_health
 
 func _physics_process(delta):
@@ -66,13 +68,14 @@ func _physics_process(delta):
 			attack_visual.position.x = 64 * facing_direction
 			attack_visual.scale.x = facing_direction
 
-		if distance_to_target <= attack_range:
-			# Close enough to attack
-			if attack_cooldown_timer <= 0:
-				perform_attack(target)
-		else:
-			# Walk towards player
-			velocity.x = direction_to_target * speed
+		if distance_to_target <= detection_range:
+			if distance_to_target <= attack_range:
+				# Close enough to attack
+				if attack_cooldown_timer <= 0:
+					perform_attack(target)
+			else:
+				# Detect and walk towards player
+				velocity.x = direction_to_target * speed
 
 	move_and_slide()
 
@@ -98,6 +101,7 @@ func take_damage(amount, knockback_vector):
 
 func die():
 	is_dead = true
+	remove_from_group("enemy")
 	attack_visual.visible = false
 	# Disable collision
 	$CollisionShape2D.set_deferred("disabled", true)
