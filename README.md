@@ -1,16 +1,21 @@
-# React + Vite
+# Godot 2D Side-Scroller
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a basic 2D side-scrolling action game setup for Godot 4.
 
-Currently, two official plugins are available:
+## Structure
+- `scenes/`: Contains `.tscn` scene files (Main scene, Player scene).
+- `scripts/`: Contains `.gd` GDScript files (Player logic).
+- `assets/`: Contains image assets like the player and floor placeholders.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
+- Player character with basic physics and movement (Left, Right, Jump)
+- Gravity affecting the player when not on the floor
+- Static floor with collision
 
-## React Compiler
+## How to Run
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Open Godot Engine (version 4.x).
+2. Click **Import** and navigate to this folder.
+3. Select the `project.godot` file and click **Import & Edit**.
+4. Press the **Play** button (`F5`) in the top-right corner to run the `Main.tscn` scene.
+5. Use the arrow keys (`Left`, `Right`) to move and the `Spacebar` or `Up` arrow to jump.
