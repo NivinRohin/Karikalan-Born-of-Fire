@@ -3,16 +3,18 @@
 This is a basic 2D side-scrolling action game setup for Godot 4.
 
 ## Structure
-- `scenes/`: Contains `.tscn` scene files (Main scene, Player scene).
-- `scripts/`: Contains `.gd` GDScript files (Player logic).
-- `assets/`: Contains image assets like the player and floor placeholders.
+- `scenes/`: Contains `.tscn` scene files (Main scene, Player scene, Enemy scene).
+- `scripts/`: Contains `.gd` GDScript files (Player and Enemy logic).
+- `assets/`: Contains image assets for sprites and hitboxes.
 
 ## Features
 - Fast mobile action game feel with smooth acceleration and deceleration.
 - Air control to allow adjustments while jumping/falling.
 - Jump buffering for responsive platforming.
 - Dash functionality (short horizontal burst).
-- Gravity affecting the player when not on the floor.
+- Combat System: Attack with the `Z` key to hit enemies, applying damage and knockback.
+- Enemies that take damage, get knocked back, and are destroyed when their health reaches zero.
+- Gravity affecting characters when not on the floor.
 - Static floor with collision.
 
 ## How to Run
@@ -26,3 +28,4 @@ This is a basic 2D side-scrolling action game setup for Godot 4.
 - **Move:** Arrow keys (`Left`, `Right`)
 - **Jump:** `Spacebar` or `Up` arrow
 - **Dash:** `Shift` key
+- **Attack:** `Z` key

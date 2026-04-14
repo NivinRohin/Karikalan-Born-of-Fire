@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxabcm38p38aa"]
+[gd_scene load_steps=6 format=3 uid="uid://cxabcm38p38aa"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_ab123"]
 [ext_resource type="Texture2D" uid="uid://ddyoy5o0230bb" path="res://assets/player.png" id="2_cd456"]
+[ext_resource type="Texture2D" uid="uid://eeyoy5o0230dd" path="res://assets/attack.png" id="3_ef456"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ef789"]
 size = Vector2(64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_at789"]
+size = Vector2(64, 48)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_ab123")
@@ -14,3 +18,19 @@ texture = ExtResource("2_cd456")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ef789")
+
+[node name="FlipPivot" type="Marker2D" parent="."]
+
+[node name="AttackArea" type="Area2D" parent="FlipPivot"]
+position = Vector2(64, 0)
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FlipPivot/AttackArea"]
+shape = SubResource("RectangleShape2D_at789")
+
+[node name="AttackVisual" type="Sprite2D" parent="FlipPivot"]
+visible = false
+position = Vector2(64, 0)
+texture = ExtResource("3_ef456")
+
+[connection signal="body_entered" from="FlipPivot/AttackArea" to="." method="_on_attack_area_body_entered"]
