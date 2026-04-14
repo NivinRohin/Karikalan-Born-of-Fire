@@ -8,14 +8,11 @@ This is a basic 2D side-scrolling action game setup for Godot 4.
 - `assets/`: Contains image assets for sprites and hitboxes.
 
 ## Features
-- Fast mobile action game feel with smooth acceleration and deceleration.
-- Air control to allow adjustments while jumping/falling.
-- Jump buffering for responsive platforming.
-- Dash functionality (short horizontal burst).
-- Combat System: Attack with the `Z` key to hit enemies, applying damage and knockback.
-- Enemies that take damage, get knocked back, and are destroyed when their health reaches zero.
-- Gravity affecting characters when not on the floor.
-- Static floor with collision.
+- **Player Controller:** Fast mobile action game feel with smooth acceleration, air control, jump buffering, and dash functionality (short horizontal burst).
+- **Combat System:** Attack with the `Z` key to hit enemies, applying damage and knockback. The player can also take damage and die (reloading the scene).
+- **Enemy AI System:** Highly reusable enemy class utilizing `@export` variables for stats (health, speed, damage). Enemies actively track the player, walk towards them, and perform attacks when in range.
+- **Death Animations:** Enemies feature a simple fade and scale Tween animation upon dying.
+- **Physics:** Gravity affects characters when not on the floor, and a static floor provides collision.
 
 ## How to Run
 

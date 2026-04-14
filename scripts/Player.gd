@@ -22,6 +22,11 @@ var dash_direction = 0.0
 var jump_buffer_timer = 0.0
 var dash_key_was_pressed = false
 
+# Combat and Health
+var health = 100
+var knockback = Vector2.ZERO
+const KNOCKBACK_RECOVERY = 1500.0
+
 # Attack constants and state
 const ATTACK_DURATION = 0.2
 const ATTACK_COOLDOWN = 0.4
@@ -35,6 +40,9 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var flip_pivot = $FlipPivot
 @onready var attack_area = $FlipPivot/AttackArea
 @onready var attack_visual = $FlipPivot/AttackVisual
+
+func _ready():
+	add_to_group("player")
 
 func _physics_process(delta):
 	# Update timers
@@ -57,6 +65,19 @@ func _physics_process(delta):
 	if not on_floor:
 		velocity.y += gravity * delta
 
+	# Process Knockback recovery
+	if knockback != Vector2.ZERO:
+		knockback = knockback.move_toward(Vector2.ZERO, KNOCKBACK_RECOVERY * delta)
+
+	# Only allow input if not heavily knocked back
+	if knockback.length() > 500:
+		velocity.x = knockback.x
+		if knockback.y != 0:
+			velocity.y = knockback.y
+			knockback.y = 0
+		move_and_slide()
+		return
+
 	# Handle jump input and buffering
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_up"):
 		jump_buffer_timer = JUMP_BUFFER_TIME
@@ -75,7 +96,7 @@ func _physics_process(delta):
 		# Flip the pivot so attack area changes sides
 		flip_pivot.scale.x = facing_direction
 
-	# Handle Dash input (Fixing the continuous hold edge case)
+	# Handle Dash input
 	var dash_key_is_pressed = Input.is_physical_key_pressed(KEY_SHIFT)
 	if dash_key_is_pressed and not dash_key_was_pressed and dash_timer <= 0 and dash_direction == 0:
 		if direction != 0:
@@ -110,7 +131,20 @@ func _physics_process(delta):
 		else:
 			velocity.x = move_toward(velocity.x, 0, current_friction * delta)
 
+		# Apply light knockback smoothly if present
+		if knockback != Vector2.ZERO:
+			velocity.x += knockback.x
+			if knockback.y != 0:
+				velocity.y += knockback.y
+				knockback.y = 0
+
 	move_and_slide()
+
+func take_damage(amount, kb_vector):
+	health -= amount
+	knockback = kb_vector
+	if health <= 0:
+		get_tree().reload_current_scene()
 
 func _on_attack_area_body_entered(body):
 	# If body is an enemy, hit them

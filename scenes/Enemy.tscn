@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxabcm38p38cc"]
+[gd_scene load_steps=5 format=3 uid="uid://cxabcm38p38cc"]
 
 [ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_en123"]
 [ext_resource type="Texture2D" uid="uid://ddyoy5o0230en" path="res://assets/enemy.png" id="2_en456"]
+[ext_resource type="Texture2D" uid="uid://eeyoy5o0230dd" path="res://assets/attack.png" id="3_at456"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_en789"]
 size = Vector2(64, 64)
@@ -14,3 +15,9 @@ texture = ExtResource("2_en456")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_en789")
+
+[node name="AttackVisual" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 0, 0, 1)
+position = Vector2(64, 0)
+texture = ExtResource("3_at456")
