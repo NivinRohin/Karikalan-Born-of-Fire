@@ -6,7 +6,14 @@ import Level1 from './Level1';
 
 function App() {
   return (
-    <Canvas style={{ width: '100vw', height: '100vh', background: '#050505' }}>
+    <Canvas
+      style={{ width: '100vw', height: '100vh', background: '#050505' }}
+      // Performance optimization:
+      // Force DPR to 1 and disable antialiasing because the heavy pixelation
+      // post-processing effect makes high-res rendering visually redundant and wastes GPU cycles.
+      dpr={1}
+      gl={{ antialias: false }}
+    >
       {/*
         OrthographicCamera configuration for 2.5D side-scrolling perspective.
         It faces down the Z-axis, showing only X and Y axes.

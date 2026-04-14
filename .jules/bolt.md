@@ -1,0 +1,3 @@
+## 2025-02-27 - [Rendering Optimization with Post-Processing]
+**Learning:** Rendering scenes at high-DPR (Retina displays) or using antialiasing (`gl={{ antialias: true }}`) wastes GPU cycles when the final output uses destructive post-processing effects like `Pixelation`. The high-resolution details are destroyed by the post-processing step anyway.
+**Action:** Always verify if high-DPR and antialiasing are actually needed when heavy post-processing (like pixelation or extreme low-res CRT effects) is applied. Force `dpr={1}` and `gl={{ antialias: false }}` on the `<Canvas>` to save rendering time.
