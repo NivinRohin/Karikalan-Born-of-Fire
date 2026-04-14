@@ -27,12 +27,39 @@ var health = 100
 var knockback = Vector2.ZERO
 const KNOCKBACK_RECOVERY = 1500.0
 
-# Attack constants and state
-const ATTACK_DURATION = 0.2
-const ATTACK_COOLDOWN = 0.4
+# Veeram Meter / Tiger Mode
+var veeram_meter: float = 0.0
+var is_tiger_mode: bool = false
+var tiger_mode_timer: float = 0.0
+const MAX_VEERAM: float = 100.0
+const VEERAM_DECAY_RATE: float = 5.0
+const TIGER_MODE_DURATION: float = 5.0
+
+# Weapon System
+enum WeaponType { SWORD, SPEAR }
+var current_weapon = WeaponType.SWORD
+
+var weapons = {
+	WeaponType.SWORD: {
+		"damage": 10,
+		"duration": 0.2,
+		"cooldown": 0.4,
+		"range_scale": 1.0,
+		"color": Color(1, 1, 0, 1) # Yellow
+	},
+	WeaponType.SPEAR: {
+		"damage": 15,
+		"duration": 0.4,
+		"cooldown": 0.8,
+		"range_scale": 2.0,
+		"color": Color(0.5, 0.5, 1.0, 1) # Light blue
+	}
+}
+
 var attack_timer = 0.0
 var attack_cooldown_timer = 0.0
 var facing_direction = 1.0 # 1.0 for right, -1.0 for left
+var q_key_was_pressed = false
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -45,6 +72,17 @@ func _ready():
 	add_to_group("player")
 
 func _physics_process(delta):
+	# Update Veeram / Tiger Mode
+	if is_tiger_mode:
+		tiger_mode_timer -= delta
+		if tiger_mode_timer <= 0:
+			is_tiger_mode = false
+			veeram_meter = 0.0 # Reset meter after mode ends
+	else:
+		# Decay Veeram Meter
+		if veeram_meter > 0:
+			veeram_meter = max(0.0, veeram_meter - VEERAM_DECAY_RATE * delta)
+
 	# Update timers
 	if jump_buffer_timer > 0:
 		jump_buffer_timer -= delta
@@ -87,14 +125,24 @@ func _physics_process(delta):
 		velocity.y = JUMP_VELOCITY
 		jump_buffer_timer = 0.0 # Consume jump buffer
 
+	# Handle Weapon Switching (Q key)
+	var q_key_is_pressed = Input.is_physical_key_pressed(KEY_Q)
+	if q_key_is_pressed and not q_key_was_pressed:
+		if current_weapon == WeaponType.SWORD:
+			current_weapon = WeaponType.SPEAR
+		else:
+			current_weapon = WeaponType.SWORD
+	q_key_was_pressed = q_key_is_pressed
+
 	# Get the input direction
 	var direction = Input.get_axis("ui_left", "ui_right")
 
 	# Update facing direction for attacks
 	if direction != 0:
 		facing_direction = direction
-		# Flip the pivot so attack area changes sides
-		flip_pivot.scale.x = facing_direction
+
+	# Scale the hitbox and visual based on facing direction and active weapon range
+	flip_pivot.scale.x = facing_direction * weapons[current_weapon]["range_scale"]
 
 	# Handle Dash input
 	var dash_key_is_pressed = Input.is_physical_key_pressed(KEY_SHIFT)
@@ -108,15 +156,20 @@ func _physics_process(delta):
 
 	# Handle Attack input (Z key)
 	if Input.is_physical_key_pressed(KEY_Z) and attack_cooldown_timer <= 0:
-		attack_timer = ATTACK_DURATION
-		attack_cooldown_timer = ATTACK_COOLDOWN
+		var w_stats = weapons[current_weapon]
+		attack_timer = w_stats["duration"]
+		attack_cooldown_timer = w_stats["cooldown"]
 		attack_area.monitoring = true
 		attack_visual.visible = true
+		attack_visual.modulate = w_stats["color"]
 
 	# Movement logic
+	var current_speed = SPEED * 1.5 if is_tiger_mode else SPEED
+	var current_dash_speed = DASH_SPEED * 1.5 if is_tiger_mode else DASH_SPEED
+
 	if dash_timer > 0:
 		# Overwrite velocity during dash, ignore gravity temporarily
-		velocity.x = dash_direction * DASH_SPEED
+		velocity.x = dash_direction * current_dash_speed
 		velocity.y = 0
 	else:
 		# Reset dash direction when not dashing
@@ -127,7 +180,7 @@ func _physics_process(delta):
 		var current_friction = FRICTION if on_floor else AIR_FRICTION
 
 		if direction != 0:
-			velocity.x = move_toward(velocity.x, direction * SPEED, current_acceleration * delta)
+			velocity.x = move_toward(velocity.x, direction * current_speed, current_acceleration * delta)
 		else:
 			velocity.x = move_toward(velocity.x, 0, current_friction * delta)
 
@@ -149,5 +202,14 @@ func take_damage(amount, kb_vector):
 func _on_attack_area_body_entered(body):
 	# If body is an enemy, hit them
 	if body.has_method("take_damage") and body != self:
-		var knockback_force = Vector2(facing_direction * 1000.0, -200.0)
-		body.take_damage(10, knockback_force)
+		var base_dmg = weapons[current_weapon]["damage"]
+		var dmg = base_dmg * 2 if is_tiger_mode else base_dmg
+		var knockback_force = Vector2(facing_direction * (1500.0 if is_tiger_mode else 1000.0), -200.0)
+		body.take_damage(dmg, knockback_force)
+
+		# Increase Veeram Meter if not already in Tiger Mode
+		if not is_tiger_mode:
+			veeram_meter = min(MAX_VEERAM, veeram_meter + 25.0)
+			if veeram_meter >= MAX_VEERAM:
+				is_tiger_mode = true
+				tiger_mode_timer = TIGER_MODE_DURATION
