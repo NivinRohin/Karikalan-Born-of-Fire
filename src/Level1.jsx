@@ -18,13 +18,18 @@ const Block = ({ position, color = "#4a4a4a", isObstacle = true, isFloor = true,
 // Retro fire pit using rapidly scaling cones
 const FirePit = ({ startX, endX, y, z }) => {
   const fireGroupRef = useRef();
+  const randomArray = useRef(new Uint32Array(1));
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     if (fireGroupRef.current) {
       fireGroupRef.current.children.forEach((flame, index) => {
+        // Secure random number generation to replace Math.random()
+        window.crypto.getRandomValues(randomArray.current);
+        const secureRandom = randomArray.current[0] / (0xffffffff + 1);
+
         // Rapid scaling and slight chaotic math for retro fire effect
-        const scaleY = 1 + Math.sin(t * 20 + index * 10) * 0.5 + Math.random() * 0.2;
+        const scaleY = 1 + Math.sin(t * 20 + index * 10) * 0.5 + secureRandom * 0.2;
         flame.scale.y = scaleY;
       });
     }
