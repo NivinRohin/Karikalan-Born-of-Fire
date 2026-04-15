@@ -22,11 +22,15 @@ const FirePit = ({ startX, endX, y, z }) => {
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     if (fireGroupRef.current) {
-      fireGroupRef.current.children.forEach((flame, index) => {
+      // ⚡ Bolt: Using a traditional for-loop instead of .forEach in useFrame
+      // eliminates per-frame closure allocations, reducing GC pressure.
+      const children = fireGroupRef.current.children;
+      for (let index = 0; index < children.length; index++) {
+        const flame = children[index];
         // Rapid scaling and slight chaotic math for retro fire effect
         const scaleY = 1 + Math.sin(t * 20 + index * 10) * 0.5 + Math.random() * 0.2;
         flame.scale.y = scaleY;
-      });
+      }
     }
   });
 
