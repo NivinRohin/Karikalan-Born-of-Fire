@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Closure Allocation in React Three Fiber useFrame]
+**Learning:** In high-frequency animation loops like `@react-three/fiber`'s `useFrame` (running at 60+ FPS), using array methods like `.forEach()` that require callbacks causes a new closure function to be allocated on every frame. This continuous memory allocation leads to frequent garbage collection sweeps, which can introduce micro-stutters and reduce rendering performance.
+**Action:** Always prefer traditional `for` or `while` loops over array methods (like `.map`, `.forEach`, `.filter`) inside `useFrame` or other high-frequency rendering loops to minimize GC pressure and ensure smooth framerates.
