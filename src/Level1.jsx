@@ -1,17 +1,38 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
+
+// External caches to map strings to shared instances
+const geometryCache = new Map();
+const materialCache = new Map();
 
 // Reusable block component for the level grid
 const Block = ({ position, color = "#4a4a4a", isObstacle = true, isFloor = true, args = [1, 1, 1] }) => {
+  // Memoize geometry to reuse it across blocks with the same dimensions
+  const geometry = useMemo(() => {
+    const key = args.join(',');
+    if (!geometryCache.has(key)) {
+      geometryCache.set(key, new THREE.BoxGeometry(...args));
+    }
+    return geometryCache.get(key);
+  }, [args]);
+
+  // Memoize material to reuse it across blocks with the same color
+  const material = useMemo(() => {
+    if (!materialCache.has(color)) {
+      materialCache.set(color, new THREE.MeshStandardMaterial({ color, roughness: 1 }));
+    }
+    return materialCache.get(color);
+  }, [color]);
+
   return (
-    <mesh position={position} userData={{ isObstacle, isFloor }}>
-      <boxGeometry args={args} />
-      {/*
-        Using MeshStandardMaterial so it interacts with the ambient and point lights,
-        while maintaining a rough stone look.
-      */}
-      <meshStandardMaterial color={color} roughness={1} />
-    </mesh>
+    <mesh
+      position={position}
+      userData={{ isObstacle, isFloor }}
+      geometry={geometry}
+      material={material}
+      dispose={null} // Prevent R3F from disposing shared geometry/material when unmounted
+    />
   );
 };
 
