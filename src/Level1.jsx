@@ -52,74 +52,48 @@ const FirePit = ({ startX, endX, y, z }) => {
 };
 
 export default function Level1() {
-  const levelBlocks = [];
   const baseY = -2;
-
-  // 1. Starting cell (x: 0 to 4)
-  for (let i = 0; i <= 4; i++) {
-    levelBlocks.push(<Block key={`start-${i}`} position={[i, baseY, 0]} />);
-  }
-
-  // 2. Wooden barricade at x: 5 (placed on top of the floor block)
-  levelBlocks.push(<Block key="barricade-floor" position={[5, baseY, 0]} />);
-  levelBlocks.push(
-    <Block
-      key="barricade"
-      position={[5, baseY + 1, 0]}
-      color="#8b5a2b"
-      args={[1, 1, 1]}
-      isFloor={false}
-      isObstacle={true}
-    />
-  );
-  levelBlocks.push(
-    <Block
-      key="barricade-top"
-      position={[5, baseY + 2, 0]}
-      color="#8b5a2b"
-      args={[1, 1, 1]}
-      isFloor={false}
-      isObstacle={true}
-    />
-  );
-
-
-  // 3. Long stone floor segment (x: 6 to 12)
-  for (let i = 6; i <= 12; i++) {
-    levelBlocks.push(<Block key={`segment1-${i}`} position={[i, baseY, 0]} />);
-  }
-
-  // 4 & 5. Fire pit gap (x: 13 to 17)
-  // Inside the gap, we place the retro fire effect
-  levelBlocks.push(<FirePit key="firepit" startX={13} endX={17} y={baseY - 0.5} z={0} />);
-
-  // 6. Raised stone platform (x: 18 to 20, y: 1 relative to base, so baseY + 1)
   const raisedY = baseY + 1;
-  for (let i = 18; i <= 20; i++) {
-    levelBlocks.push(<Block key={`raised-${i}`} position={[i, raisedY, 0]} />);
-  }
 
-  // 7. Final wide corridor (x: 21 to 28)
-  for (let i = 21; i <= 28; i++) {
-    levelBlocks.push(<Block key={`corridor-${i}`} position={[i, raisedY, 0]} />);
-  }
-
-  // 8. Exit door (dark grey box) at x: 29
-  levelBlocks.push(<Block key="exit-floor" position={[29, raisedY, 0]} />);
-  levelBlocks.push(
-    <Block
-      key="exit"
-      position={[29, raisedY + 1.5, 0]}
-      color="#222222"
-      args={[1, 2, 1]}
-      isFloor={false}
-      isObstacle={true}
-    />
-  );
+  const levelData = [
+    // 1. Starting cell (x: 0 to 4)
+    { type: 'segment', startX: 0, endX: 4, y: baseY, id: 'start' },
+    // 2. Wooden barricade at x: 5 (placed on top of the floor block)
+    { type: 'block', position: [5, baseY, 0], id: 'barricade-floor' },
+    { type: 'block', position: [5, baseY + 1, 0], color: "#8b5a2b", args: [1, 1, 1], isFloor: false, isObstacle: true, id: 'barricade' },
+    { type: 'block', position: [5, baseY + 2, 0], color: "#8b5a2b", args: [1, 1, 1], isFloor: false, isObstacle: true, id: 'barricade-top' },
+    // 3. Long stone floor segment (x: 6 to 12)
+    { type: 'segment', startX: 6, endX: 12, y: baseY, id: 'segment1' },
+    // 4 & 5. Fire pit gap (x: 13 to 17)
+    { type: 'firepit', startX: 13, endX: 17, y: baseY - 0.5, z: 0, id: 'firepit' },
+    // 6. Raised stone platform (x: 18 to 20)
+    { type: 'segment', startX: 18, endX: 20, y: raisedY, id: 'raised' },
+    // 7. Final wide corridor (x: 21 to 28)
+    { type: 'segment', startX: 21, endX: 28, y: raisedY, id: 'corridor' },
+    // 8. Exit door (dark grey box) at x: 29
+    { type: 'block', position: [29, raisedY, 0], id: 'exit-floor' },
+    { type: 'block', position: [29, raisedY + 1.5, 0], color: "#222222", args: [1, 2, 1], isFloor: false, isObstacle: true, id: 'exit' },
+  ];
 
   return (
     <group name="Level1">
-      {levelBlocks}
+      {levelData.map((data) => {
+        if (data.type === 'segment') {
+          const blocks = [];
+          for (let i = data.startX; i <= data.endX; i++) {
+            blocks.push(<Block key={`${data.id}-${i}`} position={[i, data.y, 0]} />);
+          }
+          return blocks;
+        }
+        if (data.type === 'firepit') {
+          return <FirePit key={data.id} startX={data.startX} endX={data.endX} y={data.y} z={data.z} />;
+        }
+        if (data.type === 'block') {
+          const { type: _type, id, ...props } = data;
+          return <Block key={id} {...props} />;
+        }
+        return null;
+      })}
     </group>
   );
 }
