@@ -22,18 +22,22 @@ const FirePit = ({ startX, endX, y, z }) => {
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     if (fireGroupRef.current) {
-      fireGroupRef.current.children.forEach((flame, index) => {
+      const children = fireGroupRef.current.children;
+      for (let i = 0; i < children.length; i++) {
+        const flame = children[i];
         // Rapid scaling and slight chaotic math for retro fire effect
-        const scaleY = 1 + Math.sin(t * 20 + index * 10) * 0.5 + Math.random() * 0.2;
+        // Using Math.random() here is okay for visual effects as per guidelines
+        const scaleY = 1 + Math.sin(t * 20 + i * 10) * 0.5 + Math.random() * 0.2;
         flame.scale.y = scaleY;
-      });
+      }
     }
   });
 
   const flames = [];
+  const epsilon = 0.0001;
   // Place multiple cones across the gap
-  for (let i = startX; i <= endX; i += 0.5) {
-    const isRed = i % 1 === 0;
+  for (let i = startX; i <= endX + epsilon; i += 0.5) {
+    const isRed = Math.abs(i % 1) < epsilon;
     flames.push(
       <mesh key={i} position={[i, y, z]} userData={{ isHazard: true }}>
         {/* Low-poly cone */}
