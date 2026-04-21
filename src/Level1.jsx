@@ -62,26 +62,17 @@ export default function Level1() {
 
   // 2. Wooden barricade at x: 5 (placed on top of the floor block)
   levelBlocks.push(<Block key="barricade-floor" position={[5, baseY, 0]} />);
-  levelBlocks.push(
-    <Block
-      key="barricade"
-      position={[5, baseY + 1, 0]}
-      color="#8b5a2b"
-      args={[1, 1, 1]}
-      isFloor={false}
-      isObstacle={true}
-    />
-  );
-  levelBlocks.push(
-    <Block
-      key="barricade-top"
-      position={[5, baseY + 2, 0]}
-      color="#8b5a2b"
-      args={[1, 1, 1]}
-      isFloor={false}
-      isObstacle={true}
-    />
-  );
+  for (let i = 1; i <= 2; i++) {
+    levelBlocks.push(
+      <Block
+        key={i === 1 ? 'barricade' : 'barricade-top'}
+        position={[5, baseY + i, 0]}
+        color="#8b5a2b"
+        isFloor={false}
+        isObstacle={true}
+      />
+    );
+  }
 
 
   // 3. Long stone floor segment (x: 6 to 12)
