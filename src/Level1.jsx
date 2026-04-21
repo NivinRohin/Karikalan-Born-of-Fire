@@ -1,17 +1,45 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
+
+const geometryCache = new Map();
+const materialCache = new Map();
+
+/**
+ * Retrieves a cached BoxGeometry or creates one if it doesn't exist.
+ * @param {number[]} args - The dimensions of the box [width, height, depth].
+ * @returns {THREE.BoxGeometry}
+ */
+const getGeometry = (args) => {
+  const key = args.join(',');
+  if (!geometryCache.has(key)) {
+    geometryCache.set(key, new THREE.BoxGeometry(...args));
+  }
+  return geometryCache.get(key);
+};
+
+/**
+ * Retrieves a cached MeshStandardMaterial or creates one if it doesn't exist.
+ * @param {string} color - The color of the material.
+ * @returns {THREE.MeshStandardMaterial}
+ */
+const getMaterial = (color) => {
+  if (!materialCache.has(color)) {
+    materialCache.set(color, new THREE.MeshStandardMaterial({ color, roughness: 1 }));
+  }
+  return materialCache.get(color);
+};
 
 // Reusable block component for the level grid
 const Block = ({ position, color = "#4a4a4a", isObstacle = true, isFloor = true, args = [1, 1, 1] }) => {
   return (
-    <mesh position={position} userData={{ isObstacle, isFloor }}>
-      <boxGeometry args={args} />
-      {/*
-        Using MeshStandardMaterial so it interacts with the ambient and point lights,
-        while maintaining a rough stone look.
-      */}
-      <meshStandardMaterial color={color} roughness={1} />
-    </mesh>
+    <mesh
+      position={position}
+      userData={{ isObstacle, isFloor }}
+      geometry={getGeometry(args)}
+      material={getMaterial(color)}
+      dispose={null}
+    />
   );
 };
 
