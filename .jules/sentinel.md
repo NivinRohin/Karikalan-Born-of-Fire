@@ -1,0 +1,4 @@
+## 2024-05-24 - [Avoid Security Theater with Math.random]
+**Vulnerability:** Initially flagged `Math.random()` in a 3D visual animation component (`FirePit` in `Level1.jsx`) as an "Insecure Randomness" vulnerability and attempted to replace it with a custom CSPRNG.
+**Learning:** The prompt explicitly forbids adding "security theater" with no real benefit. Replacing `Math.random()` for purely aesthetic, non-sensitive visual effects adds unnecessary complexity and overhead without actually securing anything.
+**Prevention:** Before addressing a security flag (like insecure randomness), analyze the *context* of its use. If it does not handle sensitive data, control application flow, or affect cryptography/authentication, do not treat it as a vulnerability. Focus on structural defense-in-depth measures like CSP instead.
