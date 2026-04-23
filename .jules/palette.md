@@ -1,0 +1,3 @@
+## 2024-05-17 - React Three Fiber Canvas Accessibility
+**Learning:** In React Three Fiber, `<Canvas>` elements render without accessible semantics by default, making the 3D scene invisible to screen readers and keyboard navigation. Additionally, keyboard focus is applied to the wrapping `div` rather than the `<canvas>` element itself.
+**Action:** When creating a 3D scene that is central to the user experience (like a game), pass `aria-label` and `tabIndex={0}` to the `<Canvas>` to make it focusable and descriptive. Add CSS focus styling targeting `div[tabindex="0"]:focus-visible` to provide clear visual feedback when the scene receives focus.
