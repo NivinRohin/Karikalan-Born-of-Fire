@@ -1,0 +1,4 @@
+## 2026-04-23 - Vite HMR Content Security Policy Limitations
+**Vulnerability:** Adding a strict Content-Security-Policy (CSP) that enforces `script-src 'self'` and `connect-src 'self'` breaks the development environment.
+**Learning:** Vite relies on injecting inline scripts into `index.html` (for React Refresh) and connecting to a WebSocket server (`ws:` or `wss:`) for Hot Module Replacement (HMR). A strict CSP blocks these, completely breaking development mode.
+**Prevention:** When adding CSP via `<meta>` tag in Vite applications, `script-src` must include `'unsafe-inline'` to allow Vite's injected setup script, and `connect-src` must include `ws:` and `wss:` to allow HMR websockets. Note that in production, if a build tool handles HTML generation, a stricter policy can be applied via HTTP headers.
