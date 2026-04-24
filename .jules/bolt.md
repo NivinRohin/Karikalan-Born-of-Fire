@@ -1,0 +1,3 @@
+## 2024-04-24 - R3F Auto-Disposal Memory Leak Prevention
+**Learning:** When extracting Three.js primitives (like geometries and materials) out of React Three Fiber components to reuse them across multiple `<mesh>` instances, R3F's automatic disposal system will aggressively call `.dispose()` on the shared object as soon as any single instance unmounts. This destroys the resource for all other active instances, breaking the render or causing WebGL errors.
+**Action:** Always explicitly set `dispose={null}` on any R3F primitive (`<mesh>`, `<group>`, etc.) when passing it pre-instantiated, shared resources (like `geometry={cachedGeometry}`) to prevent the auto-disposer from incorrectly freeing shared memory.
