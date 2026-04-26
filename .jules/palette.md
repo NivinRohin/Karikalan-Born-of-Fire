@@ -1,0 +1,3 @@
+## 2024-04-26 - Accessible Canvas focus styling
+**Learning:** In React Three Fiber, `<Canvas>` elements render without accessible semantics by default. Make them accessible by passing `aria-label` and `tabIndex={0}`. Because keyboard focus is applied to the wrapping `div`, apply focus styling via utility classes (e.g., Tailwind `focus-visible:ring-*`) to the `<Canvas>` `className` prop. For full-viewport canvases, ensure you use `ring-inset` (or equivalent) to prevent the focus ring from rendering off-screen.
+**Action:** Apply `aria-label`, `tabIndex={0}`, and `focus-visible` styling (with inset if full viewport) to `<Canvas>` components to ensure they are screen-reader accessible and keyboard-navigable.
