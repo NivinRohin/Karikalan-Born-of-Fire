@@ -1,0 +1,188 @@
+[gd_scene load_steps=15 format=3 uid="uid://dfabcm38p38bb"]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_main1"]
+[ext_resource type="PackedScene" uid="uid://cxabcm38p38aa" path="res://scenes/Player.tscn" id="1_gh123"]
+[ext_resource type="Texture2D" uid="uid://bg_layer1" path="res://assets/bg_layer1.png" id="2_bg1"]
+[ext_resource type="Texture2D" uid="uid://bg_layer2" path="res://assets/bg_layer2.png" id="2_bg2"]
+[ext_resource type="Texture2D" uid="uid://eeyoy5o0230cc" path="res://assets/floor.png" id="2_ij456"]
+[ext_resource type="Texture2D" uid="uid://platform" path="res://assets/platform.png" id="2_plat"]
+[ext_resource type="Texture2D" uid="uid://gate" path="res://assets/gate.png" id="2_gate"]
+[ext_resource type="PackedScene" uid="uid://cxabcm38p38cc" path="res://scenes/Enemy.tscn" id="3_kl456"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_bg"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_fg"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_veeram_fg"]
+bg_color = Color(1, 0.647, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kl789"]
+size = Vector2(2048, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_plat"]
+size = Vector2(128, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate"]
+size = Vector2(64, 128)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main1")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.1, 0.1)
+motion_mirroring = Vector2(1024, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/SkyLayer"]
+texture = ExtResource("2_bg1")
+centered = false
+
+[node name="HillsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.3, 0.3)
+motion_mirroring = Vector2(1024, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/HillsLayer"]
+position = Vector2(0, 300)
+texture = ExtResource("2_bg2")
+centered = false
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HealthLabel" type="Label" parent="UI"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 266.0
+offset_bottom = 39.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Player Health: 100"
+
+[node name="HealthBar" type="ProgressBar" parent="UI"]
+offset_left = 16.0
+offset_top = 45.0
+offset_right = 266.0
+offset_bottom = 65.0
+theme_override_styles/background = SubResource("StyleBoxFlat_health_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_health_fg")
+value = 100.0
+show_percentage = false
+
+[node name="VeeramMeter" type="ProgressBar" parent="UI"]
+offset_left = 16.0
+offset_top = 80.0
+offset_right = 266.0
+offset_bottom = 100.0
+theme_override_styles/background = SubResource("StyleBoxFlat_health_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_veeram_fg")
+value = 0.0
+show_percentage = false
+
+[node name="TigerLabel" type="Label" parent="UI"]
+visible = false
+offset_left = 16.0
+offset_top = 110.0
+offset_right = 166.0
+offset_bottom = 133.0
+theme_override_colors/font_color = Color(1, 0.5, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 32
+text = "TIGER MODE ACTIVE!"
+
+[node name="CompleteLabel" type="Label" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -50.0
+offset_right = 250.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_font_sizes/font_size = 64
+text = "LEVEL COMPLETE"
+horizontal_alignment = 1
+
+[node name="Player" parent="." instance=ExtResource("1_gh123")]
+position = Vector2(150, 300)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+limit_left = 0
+limit_bottom = 600
+
+[node name="Enemy1" parent="." instance=ExtResource("3_kl456")]
+position = Vector2(600, 400)
+
+[node name="Enemy2" parent="." instance=ExtResource("3_kl456")]
+position = Vector2(1100, 300)
+
+[node name="Enemy3" parent="." instance=ExtResource("3_kl456")]
+position = Vector2(1600, 400)
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(1024, 568)
+
+[node name="Sprite2D" type="Sprite2D" parent="Floor"]
+scale = Vector2(32, 1)
+texture = ExtResource("2_ij456")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("RectangleShape2D_kl789")
+
+[node name="Platform1" type="StaticBody2D" parent="."]
+position = Vector2(600, 450)
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform1"]
+texture = ExtResource("2_plat")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
+shape = SubResource("RectangleShape2D_plat")
+one_way_collision = true
+
+[node name="Platform2" type="StaticBody2D" parent="."]
+position = Vector2(1100, 350)
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform2"]
+texture = ExtResource("2_plat")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
+shape = SubResource("RectangleShape2D_plat")
+one_way_collision = true
+
+[node name="Platform3" type="StaticBody2D" parent="."]
+position = Vector2(1600, 450)
+
+[node name="Sprite2D" type="Sprite2D" parent="Platform3"]
+texture = ExtResource("2_plat")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
+shape = SubResource("RectangleShape2D_plat")
+one_way_collision = true
+
+[node name="Gate" type="Area2D" parent="."]
+position = Vector2(1900, 472)
+
+[node name="Sprite2D" type="Sprite2D" parent="Gate"]
+texture = ExtResource("2_gate")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gate"]
+shape = SubResource("RectangleShape2D_gate")
+
+[connection signal="body_entered" from="Gate" to="." method="_on_gate_body_entered"]
