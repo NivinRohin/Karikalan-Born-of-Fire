@@ -1,0 +1,4 @@
+## 2024-05-18 - Missing Content Security Policy in Vite App
+**Vulnerability:** The application was missing a Content-Security-Policy (CSP) meta tag, leaving it vulnerable to Cross-Site Scripting (XSS) attacks.
+**Learning:** Adding a CSP header to a Vite app requires specific directives to allow Hot Module Replacement (HMR) to function during development. Specifically, `script-src 'unsafe-inline'` is required for Vite's injected scripts, and `connect-src ws: wss:` is needed for the WebSocket connections that HMR relies on.
+**Prevention:** Always include a CSP header in `index.html` from the start of a Vite project, using directives like `content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss:;"` to balance security with development functionality.
