@@ -1,0 +1,3 @@
+## 2024-04-27 - [Optimizing R3F Memory Allocations in Render Loops]
+**Learning:** In high-frequency animation hooks like `useFrame` (@react-three/fiber), traditional `for` loops eliminate per-frame closure allocations and reduce garbage collection pressure compared to `.forEach()`. Also, when caching `args` based geometries with a Map, using `dispose={null}` on the `<mesh>` prevents React Three Fiber from disposing the shared resource when components unmount.
+**Action:** When identifying rendering bottlenecks in React Three Fiber, look for objects created inside loops or hooks that run per-frame. Pre-allocate them and use standard loop constructs. Use Map-based caches for geometries/materials with `dispose={null}` for dynamic object spawning.
