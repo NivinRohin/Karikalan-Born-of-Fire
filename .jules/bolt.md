@@ -1,0 +1,3 @@
+## 2024-04-28 - Caching Three.js Geometries based on Array Arguments
+**Learning:** When caching Three.js geometries based on array-based arguments (like `boxGeometry` args), use `args.join(',')` as a `Map` key to ensure unique configurations are correctly identified and shared across component instances. This prevents unnecessary memory overhead and GC pressure from creating redundant geometries.
+**Action:** Apply this pattern using a Map outside the component to cache objects with array props, and remember to pass `dispose={null}` when giving these shared geometries/materials to React Three Fiber to prevent unintended disposal on unmount.
