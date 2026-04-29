@@ -1,0 +1,3 @@
+## 2024-05-24 - Optimize Three.js Object Instantiation and Animation Loops
+**Learning:** In React Three Fiber, component re-renders or unmounts can cause massive memory overhead and GC pauses if Three.js objects (like `BoxGeometry` or `MeshStandardMaterial`) are instantiated inside the component or mapped to. Additionally, high-frequency animation hooks like `useFrame` suffer from closure allocations when using array methods like `.forEach()`.
+**Action:** Cache geometries and materials outside React components using a `Map` and pass `dispose={null}` to the `<mesh>` so R3F does not automatically dispose of the shared object when a consumer unmounts. Always use standard `for` loops inside `useFrame` to eliminate per-frame GC pressure.
