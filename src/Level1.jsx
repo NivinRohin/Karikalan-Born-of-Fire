@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
 // Reusable block component for the level grid
 const Block = ({ position, color = "#4a4a4a", isObstacle = true, isFloor = true, args = [1, 1, 1] }) => {
@@ -15,32 +16,48 @@ const Block = ({ position, color = "#4a4a4a", isObstacle = true, isFloor = true,
   );
 };
 
+// ⚡ Bolt Performance Optimization:
+// Pre-allocate geometries and materials outside the component to prevent
+// recreating them on every render, and avoid unnecessary GC allocations.
+const fireConeGeometry = new THREE.ConeGeometry(0.4, 1, 4);
+const fireMaterialRed = new THREE.MeshBasicMaterial({ color: "#ff0000" });
+const fireMaterialOrange = new THREE.MeshBasicMaterial({ color: "#ff8800" });
+
 // Retro fire pit using rapidly scaling cones
 const FirePit = ({ startX, endX, y, z }) => {
   const fireGroupRef = useRef();
 
   useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
     if (fireGroupRef.current) {
-      fireGroupRef.current.children.forEach((flame, index) => {
+      const t = clock.getElapsedTime();
+      const children = fireGroupRef.current.children;
+      // ⚡ Bolt Performance Optimization:
+      // Replaced .forEach with a traditional for loop to avoid creating closure
+      // functions inside useFrame every frame, reducing Garbage Collection pressure.
+      for (let i = 0; i < children.length; i++) {
+        const flame = children[i];
         // Rapid scaling and slight chaotic math for retro fire effect
-        const scaleY = 1 + Math.sin(t * 20 + index * 10) * 0.5 + Math.random() * 0.2;
+        const scaleY = 1 + Math.sin(t * 20 + i * 10) * 0.5 + Math.random() * 0.2;
         flame.scale.y = scaleY;
-      });
+      }
     }
   });
 
   const flames = [];
   // Place multiple cones across the gap
-  for (let i = startX; i <= endX; i += 0.5) {
-    const isRed = i % 1 === 0;
+  // Note: an epsilon is added to handle precision issues with float steps in JS
+  for (let i = startX; i <= endX + 0.0001; i += 0.5) {
+    // Check if whole number by comparing to rounded version
+    const isRed = Math.abs(i - Math.round(i)) < 0.001;
     flames.push(
-      <mesh key={i} position={[i, y, z]} userData={{ isHazard: true }}>
-        {/* Low-poly cone */}
-        <coneGeometry args={[0.4, 1, 4]} />
-        {/* Basic material makes it look bright and emissive regardless of scene lighting */}
-        <meshBasicMaterial color={isRed ? "#ff0000" : "#ff8800"} />
-      </mesh>
+      <mesh
+        key={i}
+        position={[i, y, z]}
+        userData={{ isHazard: true }}
+        geometry={fireConeGeometry}
+        material={isRed ? fireMaterialRed : fireMaterialOrange}
+        dispose={null} // ⚡ Prevent R3F from automatically disposing our shared resources
+      />
     );
   }
 
