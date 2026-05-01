@@ -1,0 +1,3 @@
+## 2023-10-27 - React Three Fiber Canvas Accessibility
+**Learning:** React Three Fiber `<Canvas>` elements render without accessible semantics by default, making the 3D scene invisible to screen readers and unreachable via keyboard navigation. Additionally, keyboard focus is applied to the wrapping `div` injected by R3F rather than the `<canvas>` tag itself.
+**Action:** Always make `<Canvas>` elements accessible by passing `aria-label` and `tabIndex={0}`. Apply focus styling via utility classes (e.g., Tailwind `focus-visible:ring-*`) to the `<Canvas>` `className` prop. For full-viewport canvases, ensure you use `ring-inset` (or equivalent) to prevent the focus ring from rendering off-screen.
