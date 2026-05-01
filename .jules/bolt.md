@@ -1,0 +1,3 @@
+## 2025-02-20 - React Three Fiber Loop Re-renders
+**Learning:** React Three Fiber components created inside mapped arrays without explicit caches cause massive geometry/material duplications, resulting in significant garbage collection events. Modifying loop logic inside `useFrame` from `forEach` to standard `for` loop also removes the closure-created function objects generated every frame.
+**Action:** When using dynamically rendered mapping in Three.js arrays, always create and cache static objects (such as `BoxGeometry` and `MeshStandardMaterial`) outside components and reuse them using a `Map` structure. When replacing inline geometry with cached geometry, ensure `dispose={null}` is explicitly applied.
