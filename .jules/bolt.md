@@ -1,0 +1,3 @@
+## 2026-05-02 - Pre-allocating Geometries and Materials in React Three Fiber
+**Learning:** React Three Fiber's automatic disposal system (`dispose`) will destroy geometries and materials when a component unmounts. When pulling these instantiations out of the render loop to share across multiple components globally (a crucial performance optimization to reduce memory footprint and GPU upload times), you must pass `dispose={null}` to the mesh to prevent R3F from destroying the shared resources.
+**Action:** Whenever hoisting Three.js geometries or materials outside of a component for reuse, always attach `dispose={null}` to the meshes consuming them.
