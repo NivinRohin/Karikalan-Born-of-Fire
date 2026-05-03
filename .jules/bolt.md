@@ -1,0 +1,3 @@
+## 2025-02-20 - R3F Geometry and Material Caching
+**Learning:** In React Three Fiber data-driven layouts, dynamically creating primitives (like `<boxGeometry args={args} />` or materials based on color) inside components causes massive memory allocation as each instance creates a unique geometry/material that isn't shared by default.
+**Action:** Always pre-allocate shared geometries and materials outside the React component or use a cache `Map`. For dynamic values (like args array), use `args.join(',')` as the cache key. When passing these cached objects as props, explicitly set `dispose={null}` on the `<mesh>` so R3F doesn't garbage collect the shared object when one instance unmounts.
