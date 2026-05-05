@@ -1,0 +1,4 @@
+## 2024-03-21 - Baseline Content Security Policy for Vite
+**Vulnerability:** Missing Content Security Policy (CSP) headers, leaving the application vulnerable to basic Cross-Site Scripting (XSS) attacks.
+**Learning:** Vite requires `script-src 'unsafe-inline'` and `connect-src ws: wss:` for Hot Module Replacement (HMR) to function during local development, so these must be included in the baseline CSP to prevent breaking the local development environment while still providing a baseline level of protection in production.
+**Prevention:** Ensure new projects establish a baseline CSP immediately. Ensure deployment pipelines configure strict CSP headers and ideally inject nonces for production while keeping the meta tag as a fallback.
