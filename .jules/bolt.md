@@ -1,0 +1,3 @@
+## 2024-05-07 - Pre-allocate Geometries and Materials in R3F
+**Learning:** In React Three Fiber high-frequency render loops like `useFrame`, instantiating objects (e.g. geometries and materials) inside the component and using array iteration methods (e.g., `.forEach`, `.map`) allocates new memory and inline callback functions on every frame, leading to GC (Garbage Collection) pressure and performance stutter.
+**Action:** When mapping over elements inside a `useFrame`, pre-allocate standard geometries and materials outside the component. Inside the `useFrame`, replace `.forEach` with a standard `for` loop to avoid closure overhead, and assign `dispose={null}` to geometries and materials to manage memory explicitly.
