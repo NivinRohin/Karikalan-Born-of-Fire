@@ -1,0 +1,3 @@
+## 2023-11-09 - React Three Fiber useFrame Garbage Collection Optimization
+**Learning:** In high-frequency render loops like React Three Fiber's `useFrame`, using array iteration methods (e.g., `.forEach`, `.map`) allocates new inline callback functions on every single frame, causing significant Garbage Collection (GC) pressure. Additionally, R3F's automatic object disposal can unnecessarily destroy and recreate shared objects like geometries or materials.
+**Action:** Use a standard `for` loop instead of array iteration methods inside `useFrame`. Pre-allocate objects like `Geometry` and `Material` outside of the component and apply `dispose={null}` to the relevant `<mesh>` to share resources effectively and avoid GC pauses.
