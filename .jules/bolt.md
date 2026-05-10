@@ -1,0 +1,3 @@
+## 2024-05-24 - [Three.js Resource Caching in R3F]
+**Learning:** In React Three Fiber, moving `THREE.BoxGeometry`, `THREE.ConeGeometry`, and basic materials outside of the component prevents memory pressure caused by recreation on each render. However, because R3F automatically disposes of unused objects on unmount, caching elements that are shared among multiple component instances (like blocks) requires applying `dispose={null}` to the mesh to bypass this automatic cleanup and avoid crashing remaining elements.
+**Action:** When implementing Map caches for shared `THREE` resources, always ensure you append `dispose={null}` to the elements using them.
