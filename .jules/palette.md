@@ -1,0 +1,3 @@
+## 2025-05-13 - R3F Canvas Accessibility and Focus Rings
+**Learning:** React Three Fiber `<Canvas>` elements render without accessible semantics by default and their keyboard focus is applied to the wrapping `div`, rather than the `<canvas>` tag itself. When using Tailwind for focus styling, full-viewport canvases will hide standard focus rings off-screen.
+**Action:** When making `<Canvas>` elements accessible, pass `aria-label` and `tabIndex={0}` to the component. Apply focus styling via utility classes to the `<Canvas>` `className` prop, and for full-viewport canvases, ensure you use `ring-inset` (e.g. `focus-visible:ring-inset`) to prevent the focus ring from rendering off-screen.
