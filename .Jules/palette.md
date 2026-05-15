@@ -1,0 +1,3 @@
+## 2024-05-15 - React Three Fiber Canvas Focus Ring Styling
+**Learning:** In React Three Fiber, `<Canvas>` elements render without accessible semantics by default, and when applying `tabIndex={0}` to make them focusable, the keyboard focus styling must be applied directly to the Canvas element wrapper. Furthermore, if the Canvas occupies the full viewport (`100vw`, `100vh`), standard focus rings will render off-screen.
+**Action:** Use `ring-inset` (or equivalent CSS) when applying focus-visible styles to full-screen Canvas elements to ensure the focus indicator is visible inside the canvas boundaries.
