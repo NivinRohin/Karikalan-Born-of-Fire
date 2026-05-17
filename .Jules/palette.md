@@ -1,0 +1,3 @@
+## 2025-02-15 - Add Accessible Semantics and Focus State to 3D Canvas
+**Learning:** React Three Fiber `<Canvas>` elements render without accessible semantics by default, making them unreadable to screen readers and difficult to navigate via keyboard.
+**Action:** Always provide `aria-label` and `tabIndex={0}` to `<Canvas>` components, and apply keyboard focus styles using utility classes (like Tailwind's `focus-visible:ring-*`) to the `className` prop to ensure they are fully accessible to screen readers and keyboard navigation.
