@@ -1,0 +1,3 @@
+## 2024-10-24 - Avoid Array Iteration Methods in useFrame
+**Learning:** Using array iteration methods like `.forEach` or `.map` inside `@react-three/fiber`'s `useFrame` hook creates a new inline callback function on every single frame (typically 60 times a second). This rapid allocation causes significant Garbage Collection (GC) pressure, which can lead to micro-stutters and frame drops in 3D scenes.
+**Action:** Always use standard `for` loops instead of array iteration methods when iterating over arrays or children inside high-frequency render loops like `useFrame` to prevent unnecessary allocations.
