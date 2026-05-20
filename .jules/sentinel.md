@@ -1,0 +1,4 @@
+## 2024-05-20 - Fix missing Content Security Policy
+**Vulnerability:** The project was missing a Content Security Policy (CSP), leaving it vulnerable to Cross-Site Scripting (XSS) and data injection attacks.
+**Learning:** When implementing a CSP for a Vite-based development environment, specific directives are required to maintain Hot Module Replacement (HMR) and inline development scripts. Specifically, `script-src` and `style-src` need `'unsafe-inline'`, and `connect-src` needs `ws: wss:` for the development server's WebSocket connection.
+**Prevention:** Always implement a baseline CSP in `index.html` from the start of a project, ensuring the necessary directives are present for the chosen tooling (like Vite) to function correctly while providing baseline security.
