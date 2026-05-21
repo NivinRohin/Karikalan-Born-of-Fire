@@ -1,0 +1,3 @@
+## 2024-05-21 - Accessible Full-Viewport Canvases
+**Learning:** React Three Fiber `<Canvas>` elements render without accessible semantics by default. Making them accessible requires adding `aria-label` and `tabIndex={0}`. Furthermore, because keyboard focus is applied to the wrapping `div`, for full-viewport canvases, applying focus styling via utility classes (e.g., Tailwind `focus-visible:ring-inset`) is crucial to prevent the focus ring from rendering off-screen.
+**Action:** Always add `aria-label` and `tabIndex={0}` to `<Canvas>` components. Apply focus styles (e.g. `focus-visible:ring-4 focus-visible:outline-none`) to the `className` prop, and ensure `ring-inset` is included for full-viewport or container-filling canvases.
