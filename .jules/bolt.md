@@ -1,0 +1,3 @@
+## 2024-05-18 - Reduce GC pressure in useFrame
+**Learning:** Using array iteration methods like `.forEach` or `.map` inside high-frequency render loops (like React Three Fiber's `useFrame`) creates a new inline callback function on every frame. This rapid allocation and subsequent disposal creates significant Garbage Collection (GC) overhead, leading to stutters and dropped frames in complex scenes.
+**Action:** Always use standard `for` loops instead of array iteration methods when iterating over items inside `useFrame` or other high-frequency loops to prevent unnecessary memory allocation.
