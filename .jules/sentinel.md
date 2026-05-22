@@ -1,0 +1,4 @@
+## 2026-05-22 - [Add Baseline Content Security Policy]
+**Vulnerability:** [Missing Content Security Policy (CSP) allowing potential XSS attacks]
+**Learning:** [Implementing a strict CSP in a Vite environment requires `unsafe-inline` for both scripts and styles, and `ws:`/`wss:` for connection sources to support Hot Module Replacement (HMR) during development. Without these, Vite's dev server and inline injected scripts will fail to execute.]
+**Prevention:** [When configuring CSP headers or meta tags for frontend applications using modern bundlers like Vite, always account for development requirements or use environment-specific CSP configurations to avoid breaking local development workflows while maintaining security.]
