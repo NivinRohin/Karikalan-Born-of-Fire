@@ -22,11 +22,15 @@ const FirePit = ({ startX, endX, y, z }) => {
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     if (fireGroupRef.current) {
-      fireGroupRef.current.children.forEach((flame, index) => {
+      const children = fireGroupRef.current.children;
+      // Use a standard for loop instead of .forEach to avoid inline callback allocation
+      // on every frame, reducing Garbage Collection (GC) pressure
+      for (let i = 0; i < children.length; i++) {
+        const flame = children[i];
         // Rapid scaling and slight chaotic math for retro fire effect
-        const scaleY = 1 + Math.sin(t * 20 + index * 10) * 0.5 + Math.random() * 0.2;
+        const scaleY = 1 + Math.sin(t * 20 + i * 10) * 0.5 + Math.random() * 0.2;
         flame.scale.y = scaleY;
-      });
+      }
     }
   });
 
