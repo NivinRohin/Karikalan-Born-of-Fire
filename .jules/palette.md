@@ -1,0 +1,3 @@
+## 2026-05-27 - React Three Fiber Canvas Accessibility
+**Learning:** By default, the R3F `<Canvas>` lacks accessible semantics and keyboard focus. When adding focus styling via Tailwind classes, `ring-inset` must be used for full-viewport canvases to prevent the focus ring from rendering off-screen.
+**Action:** Always add `aria-label`, `tabIndex={0}`, and visible focus states (e.g., `focus-visible:ring-inset`) to interactive `<Canvas>` components.
