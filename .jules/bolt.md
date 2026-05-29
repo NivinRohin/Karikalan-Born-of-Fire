@@ -1,0 +1,3 @@
+## 2026-05-29 - R3F Garbage Collection Pressure
+**Learning:** In React Three Fiber, using array iteration methods like `.forEach` or `.map` inside high-frequency render loops (like `useFrame`) allocates new inline callback functions on every frame, leading to increased Garbage Collection (GC) pressure and potential frame drops.
+**Action:** Use standard `for` loops inside `useFrame` or other high-frequency loops to avoid unnecessary object allocation and reduce GC overhead.
