@@ -1,0 +1,3 @@
+## 2026-05-31 - React Three Fiber Shared Resource Optimization
+**Learning:** R3F components that render many identical meshes (like level blocks) waste memory and cause GC pressure if they instantiate `<boxGeometry>` and `<meshStandardMaterial>` locally for every element. Passing shared instances using the `geometry` and `material` props to `<mesh>` prevents this, but requires `dispose={null}` so R3F doesn't destroy the shared resources when a single instance unmounts.
+**Action:** Always extract shared `THREE` objects (materials/geometries) to module-level caches or `useMemo` when rendering many identical meshes, and apply `dispose={null}` to the meshes using them.
