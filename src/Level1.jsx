@@ -1,17 +1,37 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 
+import * as THREE from 'three';
+
+// Cache for shared geometries and materials to avoid repeated instantiation
+const geometryCache = {};
+const materialCache = {};
+
+const getGeometry = (args) => {
+  const key = args.join(',');
+  if (!geometryCache[key]) {
+    geometryCache[key] = new THREE.BoxGeometry(...args);
+  }
+  return geometryCache[key];
+};
+
+const getMaterial = (color) => {
+  if (!materialCache[color]) {
+    materialCache[color] = new THREE.MeshStandardMaterial({ color, roughness: 1 });
+  }
+  return materialCache[color];
+};
+
 // Reusable block component for the level grid
 const Block = ({ position, color = "#4a4a4a", isObstacle = true, isFloor = true, args = [1, 1, 1] }) => {
   return (
-    <mesh position={position} userData={{ isObstacle, isFloor }}>
-      <boxGeometry args={args} />
-      {/*
-        Using MeshStandardMaterial so it interacts with the ambient and point lights,
-        while maintaining a rough stone look.
-      */}
-      <meshStandardMaterial color={color} roughness={1} />
-    </mesh>
+    <mesh
+      position={position}
+      userData={{ isObstacle, isFloor }}
+      geometry={getGeometry(args)}
+      material={getMaterial(color)}
+      dispose={null}
+    />
   );
 };
 
