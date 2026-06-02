@@ -1,0 +1,3 @@
+## 2026-06-02 - React Three Fiber Canvas Accessibility
+**Learning:** By default, the React Three Fiber `<Canvas>` lacks accessible semantics and keyboard focus. Interactive 3D scenes need manual `aria-label`, `tabIndex={0}`, and visible focus states (like `focus-visible:ring-inset`) for keyboard-only or screen-reader users.
+**Action:** Always verify keyboard accessibility of `<Canvas>` elements and apply standard ARIA and focus management patterns.
