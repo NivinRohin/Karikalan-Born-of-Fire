@@ -6,7 +6,12 @@ import Level1 from './Level1';
 
 function App() {
   return (
-    <Canvas style={{ width: '100vw', height: '100vh', background: '#050505' }}>
+    <Canvas
+      style={{ width: '100vw', height: '100vh', background: '#050505' }}
+      aria-label="Karikalan: Born of Fire game view"
+      tabIndex={0}
+      className="focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white focus-visible:outline-none"
+    >
       {/*
         OrthographicCamera configuration for 2.5D side-scrolling perspective.
         It faces down the Z-axis, showing only X and Y axes.
