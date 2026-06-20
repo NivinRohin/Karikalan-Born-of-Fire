@@ -1,17 +1,30 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
+
+// ⚡ Bolt Performance Optimization:
+// Shared module-level geometry and material to reduce instantiation overhead
+// when generating the level blocks.
+const sharedBoxGeometry = new THREE.BoxGeometry(1, 1, 1);
+const blockMaterials = {};
+const getMaterial = (color) => {
+  if (!blockMaterials[color]) {
+    blockMaterials[color] = new THREE.MeshStandardMaterial({ color, roughness: 1 });
+  }
+  return blockMaterials[color];
+};
 
 // Reusable block component for the level grid
 const Block = ({ position, color = "#4a4a4a", isObstacle = true, isFloor = true, args = [1, 1, 1] }) => {
   return (
-    <mesh position={position} userData={{ isObstacle, isFloor }}>
-      <boxGeometry args={args} />
-      {/*
-        Using MeshStandardMaterial so it interacts with the ambient and point lights,
-        while maintaining a rough stone look.
-      */}
-      <meshStandardMaterial color={color} roughness={1} />
-    </mesh>
+    <mesh
+      position={position}
+      userData={{ isObstacle, isFloor }}
+      geometry={sharedBoxGeometry}
+      material={getMaterial(color)}
+      scale={args}
+      dispose={null}
+    />
   );
 };
 
