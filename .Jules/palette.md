@@ -1,0 +1,3 @@
+## 2026-06-20 - Accessible React Three Fiber Canvas
+**Learning:** In `@react-three/fiber`, standard accessibility attributes like `aria-label` and `tabIndex` applied to the `<Canvas>` component are mapped to its outer `<div>` wrapper rather than the `<canvas>` DOM element itself. This wrapper requires a visible focus state to indicate to keyboard users that the game is ready for interaction.
+**Action:** Always apply `tabIndex={0}`, an appropriate `aria-label`, and interactive focus styling (e.g., via Tailwind's `focus-visible` utility) to the `<Canvas>` component so keyboard and screen reader users can discover and explicitly focus the 3D scene.
