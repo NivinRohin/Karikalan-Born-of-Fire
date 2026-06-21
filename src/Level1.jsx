@@ -22,11 +22,17 @@ const FirePit = ({ startX, endX, y, z }) => {
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     if (fireGroupRef.current) {
-      fireGroupRef.current.children.forEach((flame, index) => {
+      const children = fireGroupRef.current.children;
+      // ⚡ Bolt Performance Optimization:
+      // Replaced .forEach with a standard for loop inside the high-frequency useFrame render loop.
+      // Array iteration methods allocate new inline callback functions on every frame (60+ times per second),
+      // which causes Garbage Collection (GC) pressure and micro-stutters.
+      for (let index = 0; index < children.length; index++) {
+        const flame = children[index];
         // Rapid scaling and slight chaotic math for retro fire effect
         const scaleY = 1 + Math.sin(t * 20 + index * 10) * 0.5 + Math.random() * 0.2;
         flame.scale.y = scaleY;
-      });
+      }
     }
   });
 
