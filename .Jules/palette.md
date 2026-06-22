@@ -1,0 +1,3 @@
+## 2026-06-22 - Add keyboard accessibility and focus styles to React Three Fiber canvas
+**Learning:** In `@react-three/fiber`, the `<Canvas>` component accepts standard HTML attributes like `className`, `tabIndex`, and `aria-label`, but applies them to an outer wrapper `<div>` element rather than the underlying `<canvas>` DOM element itself. This wrapper must be targeted for keyboard accessibility.
+**Action:** Always provide explicit `tabIndex={0}`, `aria-label`, and interactive styling like `className="focus-visible:ring"` directly to the `<Canvas>` element to ensure the 3D scene can receive focus and provide feedback to keyboard users.
