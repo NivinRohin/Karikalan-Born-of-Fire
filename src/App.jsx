@@ -6,7 +6,7 @@ import Level1 from './Level1';
 
 function App() {
   return (
-    <Canvas style={{ width: '100vw', height: '100vh', background: '#050505' }}>
+    <Canvas aria-label="3D Game Level" tabIndex={0} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500" style={{ width: '100vw', height: '100vh', background: '#050505' }}>
       {/*
         OrthographicCamera configuration for 2.5D side-scrolling perspective.
         It faces down the Z-axis, showing only X and Y axes.
