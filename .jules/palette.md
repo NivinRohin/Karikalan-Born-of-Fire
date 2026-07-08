@@ -1,0 +1,3 @@
+## 2024-07-08 - Canvas Accessibility in React Three Fiber
+**Learning:** In `@react-three/fiber`, the `<Canvas>` component is completely opaque to screen readers by default. Adding standard HTML accessibility attributes like `aria-label` and `tabIndex={0}` to the `<Canvas>` tag successfully applies them to the outer wrapper `<div>`, making the 3D scene discoverable and focusable for keyboard and screen reader users without disrupting the WebGL rendering.
+**Action:** Always ensure interactive WebGL `<Canvas>` components have a descriptive `aria-label` and a `tabIndex` if they are meant to be a primary point of interaction in the layout.
